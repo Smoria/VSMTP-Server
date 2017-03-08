@@ -1,0 +1,179 @@
+﻿<UserControl x:Class="VSMTP.MessagesToolboxControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:p="clr-namespace:VSMTP.Properties"
+             Background="{DynamicResource VsBrush.Window}"
+             Foreground="{DynamicResource VsBrush.WindowText}"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300"
+             Name="VSMTPMessagesToolWindow">
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="26"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="2"
+                    HorizontalAlignment="Stretch" 
+                    VerticalAlignment="Stretch"
+                    Orientation="Horizontal">
+            <Border Margin="2">
+                <Image x:Name="ServerStatusBox" 
+                   Width="16" Height="16"
+                   Source="pack://application:,,,/Resources/Status_Play_16xLG.png" 
+                   MouseLeftButtonUp="ServerStatusBox_Click"/>
+                <Border.Style>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource VsBrush.AccentBorder}"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+            </Border>
+
+            <TextBox Width="32" Margin="2"
+                     BorderBrush="{DynamicResource VsBrush.AccentBorder}"
+                     BorderThickness="1"
+                     IsTabStop="False" 
+                     Foreground="{DynamicResource VsBrush.WindowText}"
+                     Background="Transparent"
+                     Text="{Binding Port}"
+                     ToolTip="{x:Static p:Resources.TooltipChangePort}"
+                     Padding="0"
+                     Height="16" HorizontalAlignment="Left" KeyDown="TextBox_KeyDown"/>
+            <Line Margin="2" StrokeThickness="1" Stroke="{DynamicResource VsBrush.AccentBorder}" Y2="18" Y1="0"/>
+            <Border Margin="2">
+                <Image x:Name="ClearAll"
+                   ToolTip="{x:Static p:Resources.TooltipClearMessages}" 
+                   Width="16" Height="16"
+                   Source="pack://application:,,,/Resources/Action_Clear_16xLG.png" 
+                   MouseLeftButtonUp="ClearAll_Click" />
+                <Border.Style>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource VsBrush.AccentBorder}"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+            </Border>
+        </StackPanel>
+        <ListBox ScrollViewer.VerticalScrollBarVisibility="Visible" 
+                 ScrollViewer.HorizontalScrollBarVisibility="Auto" 
+                 HorizontalContentAlignment="Stretch" 
+                 HorizontalAlignment="Stretch"
+                 VerticalAlignment="Stretch"
+                 x:Name="messagesListBox" 
+                 Grid.Row="1" Grid.Column="0" 
+                 Background="{DynamicResource VsBrush.Window}" 
+                 Foreground="{DynamicResource VsBrush.WindowText}"
+                 KeyDown="messagesListBox_KeyDown" BorderBrush="{x:Null}">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderBrush="{DynamicResource VsBrush.TitleBarActive}" BorderThickness="1" Padding="5">
+                        <Border.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="{x:Static p:Resources.CMenuRemove}" Click="CMenuRemove_Click"/>
+                                <MenuItem Header="{x:Static p:Resources.CMenuCopyMessage}" Click="CMenuCopyMessage_Click"/>
+                                <MenuItem Header="{x:Static p:Resources.CMenuCopyRAW}" Click="CMenuCopyRAW_Click"/>
+                            </ContextMenu>
+                        </Border.ContextMenu>
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="2"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="20"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="60"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Foreground="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" Grid.Row="0" Grid.ColumnSpan="2" Text="{Binding Date}">
+                                    <TextBlock.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="{x:Static p:Resources.CMenuCopyDate}" Click="CMenuCopyDate_Click"/>
+                                        </ContextMenu>
+                                    </TextBlock.ContextMenu>
+                                </TextBlock>
+
+                                <TextBlock Foreground="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" HorizontalAlignment="Right" Grid.Row="1" Grid.Column="0" Text="{x:Static p:Resources.TitleMessageFrom}"/>
+                                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding MessageFrom}">
+                                    <TextBlock.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="{x:Static p:Resources.CMenuCopyFrom}" Click="CMenuCopyFrom_Click"/>
+                                        </ContextMenu>
+                                    </TextBlock.ContextMenu>
+                                </TextBlock>
+
+                                <TextBlock Foreground="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" HorizontalAlignment="Right" Grid.Row="2" Grid.Column="0" Text="{x:Static p:Resources.TitleMessageSubject}"/>
+                                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Subject}">
+                                    <TextBlock.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="{x:Static p:Resources.CMenuCopySubject}" Click="CMenuCopySubject_Click"/>
+                                        </ContextMenu>
+                                    </TextBlock.ContextMenu>
+                                </TextBlock>
+
+                                <TextBlock Foreground="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" HorizontalAlignment="Right" Grid.Row="3" Grid.Column="0" Text="{x:Static p:Resources.TitleMessageTo}"/>
+                                <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding MessageTo}">
+                                    <TextBlock.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="{x:Static p:Resources.CMenuCopyTo}" Click="CMenuCopyTo_Click"/>
+                                        </ContextMenu>
+                                    </TextBlock.ContextMenu>
+                                </TextBlock>
+
+                                <TextBlock Foreground="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" HorizontalAlignment="Right" Grid.Row="4" Grid.Column="0" Text="{x:Static p:Resources.TitleMessageCC}"/>
+                                <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding MessageCC}">
+                                    <TextBlock.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="{x:Static p:Resources.CMenuCopyCC}" Click="CMenuCopyCC_Click"/>
+                                        </ContextMenu>
+                                    </TextBlock.ContextMenu>
+                                </TextBlock>
+
+                                <TextBlock Foreground="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" HorizontalAlignment="Right" Grid.Row="5" Grid.Column="0" Text="{x:Static p:Resources.TitleMessageReplyTo}"/>
+                                <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding ReplyTo}">
+                                    <TextBlock.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="{x:Static p:Resources.CMenuCopyReplyTo}" Click="CMenuCopyReplyTo_Click"/>
+                                        </ContextMenu>
+                                    </TextBlock.ContextMenu>
+                                </TextBlock>
+                            </Grid>
+                            <Rectangle Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}"/>
+                            <TextBlock Margin="5,5,5,5" Grid.Row="2" Grid.Column="0" Text="{Binding Message}"/>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</UserControl>
